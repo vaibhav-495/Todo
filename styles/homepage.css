@@ -1,0 +1,16 @@
+.wrapper {
+    width:100%;
+}
+.inner-wrapper {
+    position: relative;
+    width: 60%;
+    margin:0 auto;
+}
+.input-field {
+    width: 80%;
+    height:40px;
+}
+#save {
+    width:10% ;
+    height:40px;
+}

@@ -1,0 +1,1 @@
+var Backbone.LocalStorage = require("backbone.localstorage");
