@@ -9,34 +9,37 @@
 </html>
 <html>
   <head>
-    <title>A</title>
+    <title>TODOS</title>
     <link rel="stylesheet" type="text/css" href="styles/homepage.css">
   </head>
   <body>
 
     <div id="wrapper">
-        <div class="inner-wrapper">
-          <div class="input-wrapper">
-            <input class="input-field">
-            <button id="save"> Save</button>
+        <div class="todo"> 
+          <div class="todo__heading">TODOS</div> 
+          <!-- <button id="delete-all">Delete all</button> -->  
+          <div class="input"> 
+            <input class="input__field" placeholder="What needs to be done ?"> 
           </div>
-          <div class="todo-view">
-            <ul id="todo-list"></ul>
+          <div class="todo-view"> 
+            <div class="todo-view__list" id="todo-list"></div> 
           </div>
         </div>
     </div>
   </body>
 
   <script type="text/template" id="item-template">
-    <div class="view">
-      <input class="toggle" type="checkbox">
-      <label><%=content%></label>
+    <div class="template">  
+      <input class="template__toggle" type="checkbox" <%=completed ? 'checked' : '' %>> 
+      <label class="template__content"><%=content%></label> 
+      <button class="template__delete">Delete</button>
     </div>
   </script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.5.3/less.min.js"></script>
   <script src="js/underscore.js"></script>
   <script src="js/jquery.js"> </script>
   <script src="js/backbone.js"></script>
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone-localstorage.js/1.0/backbone.localStorage-min.js" type="text/javascript"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone-localstorage.js/1.1.16/backbone.localStorage-min.js" type="text/javascript"></script>
   <script src="js/model/todoModel.js"></script>
   <script src="js/collection/todoCollection.js"></script>
   <script src="js/view/todoView.js"></script>

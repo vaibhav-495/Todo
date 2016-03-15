@@ -2,13 +2,12 @@ var app = app || {};
 app.AppView = Backbone.View.extend({
     el:"#wrapper",
     events: {
-        'click #save': 'addTodo'
+        "keydown .input__field" : "keyPressEventHandler",
+        "click #delete-all" : "deleteAllTodos"
     },
 
     initialize: function(){
-        this.input = $(".input-field");
-        this.buttonSave = $("#save");
-        console.log(this.buttonSave);
+        this.input = $(".input__field");
         this.parentDiv = $("#todo-list");
         app.todoList.on("add reset remove",this.addAll,this);
         app.todoList.fetch();
@@ -16,7 +15,6 @@ app.AppView = Backbone.View.extend({
 
     addAll: function(){
         this.parentDiv.html('');
-        console.log(app.todoList);
         app.todoList.each(this.addOne,this);
     },
     addOne: function(todo){
@@ -26,8 +24,21 @@ app.AppView = Backbone.View.extend({
     addTodo: function(){
         var con=this.input.val().trim();
         this.input.val('');
-        console.log(con);
-        app.todoList.create({content: con,completed:false});
+        if(con !== '')
+        {
+            app.todoList.create({content: con,completed:false});    
+        }
+    },
+    keyPressEventHandler : function(event){
+        if(event.keyCode == 13){
+            this.addTodo();
+        }
+    },
+    deleteAllTodos: function(){
+        var model;
+        while (model = app.todoList.first()) {
+            model.destroy();
+        }
     }
 });
 app.appview=new app.AppView();
