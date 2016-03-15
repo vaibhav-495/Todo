@@ -1,54 +1,53 @@
 var app = app || {};
 app.AppView = Backbone.View.extend({
-    el:"#wrapper",
-    footer : "footer",
+    el:'<div><ul class="todo-list"></ul><footer class="list-footer"></footer></div>',
+
     template : _.template($("#item-footer").html()),
 
     events: {
-        'click #save': 'addTodo',
         'click .clear' : 'clearCompleted',
-        'click .done-todo': function () {this.addAll(app.todoList.getDone());},
-        'click .left-todo': function () {this.addAll(app.todoList.getRemaining());},
-        'click .all-todo' : 'addAll'
+        'click .done-todo': function () {this.render(app.todoList.getDone());},
+        'click .left-todo': function () {this.render(app.todoList.getRemaining());},
+        'click .all-todo' : 'render'
     },
 
     initialize: function(){
-        this.jInput = $(".input-field");
-        this.parentDiv = $("#todo-list");
+        var that = this;
+        that.jTodoList = that.$el.find(".todo-list");
+        that.jFooter = that.$el.find('.list-footer');
 
-        app.todoList.on("reset remove",this.addAll,this);
+        app.todoList.on("remove",this.render,this);
         app.todoList.on("add", this.addOne, this);
         app.todoList.on("all", this.updateFooter , this);
 
         app.todoList.fetch();
     },
 
-    updateFooter : function () {
-        var remaining = app.todoList.getRemaining().length;
-        $(this.footer).html(this.template({left : remaining}));
-    },
-
-    addAll: function(todos){
+    render : function (todos) {
         var models = app.todoList.models,
             that = this;
         if (Array.isArray(todos)) {
             models = todos;
         }
-        this.parentDiv.html('');
+        this.jTodoList.html('');
         models.forEach(function (model){
             that.addOne(model);
-        })
+        });
+        this.updateFooter();
+        return this;
+    },
+
+    updateFooter : function () {
+        var remaining = app.todoList.getRemaining().length;
+        $(this.jFooter).html(this.template({left : remaining}));
     },
 
     addOne: function(todo){
         var view=new app.todoView({model:todo});
-        this.parentDiv.append(view.render().el);
+        $(this.jTodoList).append(view.render().el);
     },
 
-    addTodo: function(){
-        var con=this.jInput.val().trim();
-        this.jInput.val('');
-        console.log(con);
+    addTodo: function(con){
         app.todoList.create({content: con,completed:false});
     },
 
@@ -59,4 +58,3 @@ app.AppView = Backbone.View.extend({
         })
     }
 });
-app.appview=new app.AppView();
