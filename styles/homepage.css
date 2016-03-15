@@ -14,3 +14,7 @@
     width:10% ;
     height:40px;
 }
+.done label{
+    color: #d9d9d9;
+    text-decoration: line-through;
+}
