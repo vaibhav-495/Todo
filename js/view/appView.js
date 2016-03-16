@@ -1,13 +1,24 @@
-var app = app || {};
-app.AppView = Backbone.View.extend({
+import $ from "jquery";
+
+import _ from "underscore";
+
+import Backbone from "backbone";
+
+import LocalStorage from "backbone.localstorage";
+
+import todoList from "../collection/todoCollection";
+
+import todoView from "./todoView";
+
+module.exports = Backbone.View.extend({
     el:'<div><div class="todo-view__list todo-list"></div><footer class="list-footer"></footer></div>',
 
     template : _.template($("#item-footer").html()),
 
     events: {
         'click .clear' : 'clearCompleted',
-        'click .done-todo': function () {this.render(app.todoList.getDone());},
-        'click .left-todo': function () {this.render(app.todoList.getRemaining());},
+        'click .done-todo': function () {this.render(todoList.getDone());},
+        'click .left-todo': function () {this.render(todoList.getRemaining());},
         'click .all-todo' : 'render'
     },
 
@@ -16,15 +27,15 @@ app.AppView = Backbone.View.extend({
         that.jTodoList = that.$el.find(".todo-list");
         that.jFooter = that.$el.find('.list-footer');
 
-        app.todoList.on("remove",this.render,this);
-        app.todoList.on("add", this.addOne, this);
-        app.todoList.on("all", this.updateFooter , this);
+        todoList.on("remove",this.render,this);
+        todoList.on("add", this.addOne, this);
+        todoList.on("all", this.updateFooter , this);
 
-        app.todoList.fetch();
+        todoList.fetch();
     },
 
     render : function (todos) {
-        var models = app.todoList.models,
+        var models = todoList.models,
             that = this;
         if (Array.isArray(todos)) {
             models = todos;
@@ -38,22 +49,22 @@ app.AppView = Backbone.View.extend({
     },
 
     updateFooter : function () {
-        var remaining = app.todoList.getRemaining().length;
+        var remaining = todoList.getRemaining().length;
         $(this.jFooter).html(this.template({left : remaining}));
     },
 
 
     addOne: function(todo){
-        var view=new app.todoView({model:todo});
+        var view = new todoView({model:todo});
         $(this.jTodoList).append(view.render().el);
     },
 
     addTodo: function(con){
-        app.todoList.create({content: con,completed:false});
+        todoList.create({content: con,completed:false});
     },
 
     clearCompleted : function () {
-        var doneModels = app.todoList.getDone();
+        var doneModels = todoList.getDone();
         doneModels.forEach(function (model) {
             model.destroy();
         })

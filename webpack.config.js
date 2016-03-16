@@ -1,5 +1,5 @@
 module.exports = {
-    entry: "./start.js",
+    entry: "./js/view/completeView.js",
     output: {
         filename: "bundle.js"
     },

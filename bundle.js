@@ -62,7 +62,46 @@
 
 	var _backbone4 = _interopRequireDefault(_backbone3);
 
+	var _appView = __webpack_require__(5);
+
+	var _appView2 = _interopRequireDefault(_appView);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var CompleteView = _backbone2.default.View.extend({
+
+	    el: "#wrapper",
+
+	    events: {
+	        'keypress .input__field': function keypressInput__field(e) {
+	            e.keyCode === 13 && this.addTodo();
+	        }
+	    },
+
+	    initialize: function initialize() {
+	        this.appView = new _appView2.default();
+
+	        this.jInput = (0, _jquery2.default)(".input__field");
+	        this.render();
+	    },
+
+	    render: function render() {
+	        this.$el.find('.todo-view').html(this.appView.render().el);
+	    },
+
+	    addTodo: function addTodo() {
+
+	        var input = this.jInput.val().trim();
+	        if (!input) return;
+	        this.jInput.val("");
+	        this.appView.addTodo(input);
+	    }
+
+	}); /**
+	     * Created by achut on 3/15/16.
+	     */
+
+	new CompleteView();
 
 /***/ },
 /* 1 */
@@ -13645,6 +13684,236 @@
 	return Backbone.LocalStorage;
 	}));
 
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var _jquery = __webpack_require__(1);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _underscore = __webpack_require__(2);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _backbone = __webpack_require__(3);
+
+	var _backbone2 = _interopRequireDefault(_backbone);
+
+	var _backbone3 = __webpack_require__(4);
+
+	var _backbone4 = _interopRequireDefault(_backbone3);
+
+	var _todoCollection = __webpack_require__(6);
+
+	var _todoCollection2 = _interopRequireDefault(_todoCollection);
+
+	var _todoView = __webpack_require__(8);
+
+	var _todoView2 = _interopRequireDefault(_todoView);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	module.exports = _backbone2.default.View.extend({
+	    el: '<div><div class="todo-view__list todo-list"></div><footer class="list-footer"></footer></div>',
+
+	    template: _underscore2.default.template((0, _jquery2.default)("#item-footer").html()),
+
+	    events: {
+	        'click .clear': 'clearCompleted',
+	        'click .done-todo': function clickDoneTodo() {
+	            this.render(_todoCollection2.default.getDone());
+	        },
+	        'click .left-todo': function clickLeftTodo() {
+	            this.render(_todoCollection2.default.getRemaining());
+	        },
+	        'click .all-todo': 'render'
+	    },
+
+	    initialize: function initialize() {
+	        var that = this;
+	        that.jTodoList = that.$el.find(".todo-list");
+	        that.jFooter = that.$el.find('.list-footer');
+
+	        _todoCollection2.default.on("remove", this.render, this);
+	        _todoCollection2.default.on("add", this.addOne, this);
+	        _todoCollection2.default.on("all", this.updateFooter, this);
+
+	        _todoCollection2.default.fetch();
+	    },
+
+	    render: function render(todos) {
+	        var models = _todoCollection2.default.models,
+	            that = this;
+	        if (Array.isArray(todos)) {
+	            models = todos;
+	        }
+	        this.jTodoList.html('');
+	        models.forEach(function (model) {
+	            that.addOne(model);
+	        });
+	        this.updateFooter();
+	        return this;
+	    },
+
+	    updateFooter: function updateFooter() {
+	        var remaining = _todoCollection2.default.getRemaining().length;
+	        (0, _jquery2.default)(this.jFooter).html(this.template({ left: remaining }));
+	    },
+
+	    addOne: function addOne(todo) {
+	        var view = new _todoView2.default({ model: todo });
+	        (0, _jquery2.default)(this.jTodoList).append(view.render().el);
+	    },
+
+	    addTodo: function addTodo(con) {
+	        _todoCollection2.default.create({ content: con, completed: false });
+	    },
+
+	    clearCompleted: function clearCompleted() {
+	        var doneModels = _todoCollection2.default.getDone();
+	        doneModels.forEach(function (model) {
+	            model.destroy();
+	        });
+	    }
+	});
+
+/***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var _jquery = __webpack_require__(1);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _underscore = __webpack_require__(2);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _backbone = __webpack_require__(3);
+
+	var _backbone2 = _interopRequireDefault(_backbone);
+
+	var _backbone3 = __webpack_require__(4);
+
+	var _backbone4 = _interopRequireDefault(_backbone3);
+
+	var _todoModel = __webpack_require__(7);
+
+	var _todoModel2 = _interopRequireDefault(_todoModel);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var TodoList = _backbone2.default.Collection.extend({
+	    model: _todoModel2.default,
+	    localStorage: new Store("backbone-todo"),
+
+	    getRemaining: function getRemaining() {
+	        return this.where({ completed: false });
+	    },
+
+	    getDone: function getDone() {
+	        return this.where({ completed: true });
+	    }
+	});
+
+	module.exports = new TodoList();
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var _jquery = __webpack_require__(1);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _underscore = __webpack_require__(2);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _backbone = __webpack_require__(3);
+
+	var _backbone2 = _interopRequireDefault(_backbone);
+
+	var _backbone3 = __webpack_require__(4);
+
+	var _backbone4 = _interopRequireDefault(_backbone3);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	module.exports = _backbone2.default.Model.extend({
+	    defaults: {
+	        content: '',
+	        completed: false
+	    },
+
+	    toggle: function toggle() {
+	        this.save({ completed: !this.get('completed') });
+	    }
+
+	});
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var _jquery = __webpack_require__(1);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _underscore = __webpack_require__(2);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _backbone = __webpack_require__(3);
+
+	var _backbone2 = _interopRequireDefault(_backbone);
+
+	var _backbone3 = __webpack_require__(4);
+
+	var _backbone4 = _interopRequireDefault(_backbone3);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	module.exports = _backbone2.default.View.extend({
+
+	    tagName: 'div',
+	    className: 'todo-model-div',
+	    template: _underscore2.default.template((0, _jquery2.default)('#item-template').html()),
+
+	    events: {
+	        'click .template__toggle': 'toggleTodo',
+	        "click .template__delete": "deleteTodo"
+	    },
+
+	    initialize: function initialize() {
+	        this.model.on("change", this.render, this);
+	    },
+
+	    render: function render() {
+	        this.$el.html(this.template(this.model.toJSON()));
+	        this.$el.toggleClass("todo-model-div--checked", this.model.get("completed"));
+	        return this;
+	    },
+
+	    toggleTodo: function toggleTodo() {
+	        this.model.toggle();
+	    },
+
+	    deleteTodo: function deleteTodo() {
+	        this.model.destroy();
+	    }
+
+	});
 
 /***/ }
 /******/ ]);

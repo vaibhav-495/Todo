@@ -1,7 +1,16 @@
-var app = app||{};
+import $ from "jquery";
 
-app.TodoList= Backbone.Collection.extend({
-    model: app.Todo,
+import _ from "underscore";
+
+import Backbone from "backbone";
+
+import LocalStorage from "backbone.localstorage";
+
+import todoModel from "../model/todoModel";
+
+
+var TodoList = Backbone.Collection.extend({
+    model: todoModel,
     localStorage: new Store("backbone-todo"),
 
     getRemaining : function () {
@@ -14,4 +23,4 @@ app.TodoList= Backbone.Collection.extend({
 });
 
 
-app.todoList = new app.TodoList();
+module.exports = new TodoList();

@@ -1,6 +1,12 @@
-var app = app || {};
+import $ from "jquery";
 
-app.Todo=Backbone.Model.extend({
+import _ from "underscore";
+
+import Backbone from "backbone";
+
+import LocalStorage from "backbone.localstorage";
+
+module.exports = Backbone.Model.extend({
     defaults: {
         content: '',
         completed: false

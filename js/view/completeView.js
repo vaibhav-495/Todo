@@ -2,9 +2,18 @@
  * Created by achut on 3/15/16.
  */
 
+import $ from "jquery";
 
-var app = app || {};
-app.CompleteView = Backbone.View.extend({
+import _ from "underscore";
+
+import Backbone from "backbone";
+
+import LocalStorage from "backbone.localstorage";
+
+import AppView from "./appView";
+
+
+var CompleteView = Backbone.View.extend({
 
     el:"#wrapper",
 
@@ -15,14 +24,14 @@ app.CompleteView = Backbone.View.extend({
     },
 
     initialize: function(){
-        app.appview = new app.AppView();
+        this.appView = new AppView();
 
         this.jInput = $(".input__field");
         this.render();
     },
 
     render : function () {
-        this.$el.find('.todo-view').html(app.appview.render().el);
+        this.$el.find('.todo-view').html(this.appView.render().el);
     },
 
     addTodo : function(){
@@ -30,9 +39,9 @@ app.CompleteView = Backbone.View.extend({
         var input = this.jInput.val().trim();
         if (!input) return;
         this.jInput.val("");
-        app.appview.addTodo(input);
+        this.appView.addTodo(input);
     }
 
 });
 
-app.completeView=new app.CompleteView();
+new CompleteView();

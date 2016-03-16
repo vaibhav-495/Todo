@@ -1,4 +1,14 @@
-app.todoView=Backbone.View.extend({
+import $ from "jquery";
+
+import _ from "underscore";
+
+import Backbone from "backbone";
+
+import LocalStorage from "backbone.localstorage";
+
+
+module.exports = Backbone.View.extend({
+
     tagName: 'div',
     className: 'todo-model-div',
     template: _.template($('#item-template').html()),
