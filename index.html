@@ -9,16 +9,17 @@
 </html>
 <html>
   <head>
-    <title>A</title>
+    <title>TODOS</title>
     <link rel="stylesheet" type="text/css" href="styles/homepage.css">
   </head>
   <body>
 
     <div id="wrapper">
-        <div class="inner-wrapper">
-          <div class="input-wrapper">
-            <input class="input-field">
-            <button id="save"> Save</button>
+        <div class="todo"> 
+          <div class="todo__heading">TODOS</div> 
+          <!-- <button id="delete-all">Delete all</button> -->  
+          <div class="input"> 
+            <input class="input__field" placeholder="What needs to be done ?"> 
           </div>
         <div class = "todo-view"></div>
         </div>
@@ -26,10 +27,18 @@
   </body>
 
   <script type="text/template" id="item-template">
-    <div class="view">
-      <input class="toggle" type="checkbox" <%= completed ? 'checked' : '' %>>
-      <label><%=content%></label>
-    </div>
+
+    <!--<div class="view">-->
+      <!--<input class="toggle" type="checkbox" <%= completed ? 'checked' : '' %>>-->
+      <!--<label><%=content%></label>-->
+    <!--</div>-->
+
+<div class="template">
+    <input class="template__toggle" type="checkbox" <%=completed ? 'checked' : '' %>>
+    <label class="template__content"><%=content%></label>
+    <button class="template__delete">Delete</button>
+</div>
+
   </script>
 
   <script type="text/template" id = "item-footer">
@@ -39,6 +48,8 @@
       <button class="all-todo">Show All</button>
       <button class = "clear">Clear Completed</button>
 </script>
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.5.3/less.min.js"></script>
   <script src="js/underscore.js"></script>
   <script src="js/jquery.js"> </script>
   <script src="js/backbone.js"></script>

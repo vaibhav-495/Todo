@@ -1,6 +1,6 @@
 var app = app || {};
 app.AppView = Backbone.View.extend({
-    el:'<div><ul class="todo-list"></ul><footer class="list-footer"></footer></div>',
+    el:'<div><div class="todo-view__list todo-list"></div><footer class="list-footer"></footer></div>',
 
     template : _.template($("#item-footer").html()),
 
@@ -41,6 +41,7 @@ app.AppView = Backbone.View.extend({
         var remaining = app.todoList.getRemaining().length;
         $(this.jFooter).html(this.template({left : remaining}));
     },
+
 
     addOne: function(todo){
         var view=new app.todoView({model:todo});
