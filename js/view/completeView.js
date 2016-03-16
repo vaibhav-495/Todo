@@ -9,7 +9,10 @@ app.CompleteView = Backbone.View.extend({
     el:"#wrapper",
 
     events: {
-        'click #save': 'addTodo'
+        'click #save': 'addTodo',
+        'keypress .input-field' : function(e){
+            e.keyCode === 13 && this.addTodo();
+        }
     },
 
     initialize: function(){
@@ -24,6 +27,7 @@ app.CompleteView = Backbone.View.extend({
     },
 
     addTodo : function(){
+
         var input = this.jInput.val().trim();
         if (!input) return;
         this.jInput.val("");

@@ -20,8 +20,7 @@
             <input class="input-field">
             <button id="save"> Save</button>
           </div>
-          <div class="todo-view">
-          </div>
+        <div class = "todo-view"></div>
         </div>
     </div>
   </body>
@@ -35,9 +34,9 @@
 
   <script type="text/template" id = "item-footer">
       <span> <%= left %> <%= left == 1 ? 'item' : 'items' %> left </span>
-      <button class= "done-todo">Done</button>
-      <button class="left-todo">Left</button>
-      <button class="all-todo">All</button>
+      <button class= "done-todo">Show Completed</button>
+      <button class="left-todo">Show Remaining</button>
+      <button class="all-todo">Show All</button>
       <button class = "clear">Clear Completed</button>
 </script>
   <script src="js/underscore.js"></script>
