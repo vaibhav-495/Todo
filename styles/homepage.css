@@ -27,9 +27,12 @@
 .input__field::-webkit-input-placeholder {
  	color:#bababa; 
 }
+html, body {
+    margin: 0;
+    height: 100%;
+}
 body {
 	background-color: #fdfdfd;
-	height: 100%;
 }
 
 
@@ -45,7 +48,7 @@ body {
     font-size: 20px;
     border-bottom: 1px solid #dedede;
 }
-.todo-model-div--checked label{
+.checked label{
 	text-decoration: line-through;
 	
 }
