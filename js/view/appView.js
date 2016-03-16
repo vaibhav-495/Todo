@@ -24,10 +24,10 @@ app.AppView = Backbone.View.extend({
     addTodo: function(){
         var con=this.input.val().trim();
         this.input.val('');
-        if(con !== '')
-        {
-            app.todoList.create({content: con,completed:false});    
+        if(!con) {
+            return;
         }
+        app.todoList.create({content: con,completed:false});
     },
     keyPressEventHandler : function(event){
         if(event.keyCode == 13){
