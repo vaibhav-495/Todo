@@ -1,44 +1,61 @@
 var app = app || {};
 app.AppView = Backbone.View.extend({
-    el:"#wrapper",
+    el:'<div><div class="todo-view__list todo-list"></div><footer class="list-footer"></footer></div>',
+
+    template : _.template($("#item-footer").html()),
+
     events: {
-        "keydown .input__field" : "keyPressEventHandler",
-        "click #delete-all" : "deleteAllTodos"
+        'click .clear' : 'clearCompleted',
+        'click .done-todo': function () {this.render(app.todoList.getDone());},
+        'click .left-todo': function () {this.render(app.todoList.getRemaining());},
+        'click .all-todo' : 'render'
     },
 
     initialize: function(){
-        this.input = $(".input__field");
-        this.parentDiv = $("#todo-list");
-        app.todoList.on("add reset remove",this.addAll,this);
+        var that = this;
+        that.jTodoList = that.$el.find(".todo-list");
+        that.jFooter = that.$el.find('.list-footer');
+
+        app.todoList.on("remove",this.render,this);
+        app.todoList.on("add", this.addOne, this);
+        app.todoList.on("all", this.updateFooter , this);
+
         app.todoList.fetch();
     },
 
-    addAll: function(){
-        this.parentDiv.html('');
-        app.todoList.each(this.addOne,this);
+    render : function (todos) {
+        var models = app.todoList.models,
+            that = this;
+        if (Array.isArray(todos)) {
+            models = todos;
+        }
+        this.jTodoList.html('');
+        models.forEach(function (model){
+            that.addOne(model);
+        });
+        this.updateFooter();
+        return this;
     },
+
+    updateFooter : function () {
+        var remaining = app.todoList.getRemaining().length;
+        $(this.jFooter).html(this.template({left : remaining}));
+    },
+
+
     addOne: function(todo){
         var view=new app.todoView({model:todo});
-        this.parentDiv.append(view.render().el);
+        $(this.jTodoList).append(view.render().el);
     },
-    addTodo: function(){
-        var con=this.input.val().trim();
-        this.input.val('');
-        if(con !== '')
-        {
-            app.todoList.create({content: con,completed:false});    
-        }
+
+    addTodo: function(con){
+        app.todoList.create({content: con,completed:false});
     },
-    keyPressEventHandler : function(event){
-        if(event.keyCode == 13){
-            this.addTodo();
-        }
-    },
-    deleteAllTodos: function(){
-        var model;
-        while (model = app.todoList.first()) {
+
+    clearCompleted : function () {
+        var doneModels = app.todoList.getDone();
+        doneModels.forEach(function (model) {
             model.destroy();
-        }
+        })
     }
 });
-app.appview=new app.AppView();
