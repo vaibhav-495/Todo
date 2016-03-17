@@ -36,29 +36,33 @@ module.exports = Backbone.View.extend({
 
     render : function (todos) {
         var models = todoList.models,
-            that = this;
+            str = '',
+            that = this,
+            frag = document.createDocumentFragment();
+
         if (Array.isArray(todos)) {
             models = todos;
         }
         this.jTodoList.html('');
         models.forEach(function (model){
-            that.addOne(model);
+            frag.insertBefore(that.addOneStr(model),frag.firstChild);
         });
+        $(this.jTodoList).append(frag);
         this.updateFooter();
         return this;
     },
-
     updateFooter : function () {
         var remaining = todoList.getRemaining().length;
         $(this.jFooter).html(this.template({left : remaining}));
     },
-
-
     addOne: function(todo){
         var view = new todoView({model:todo});
-        $(this.jTodoList).append(view.render().el);
+        $(this.jTodoList).prepend(view.render().el);
     },
-
+    addOneStr : function(todo){
+        var view = new todoView({model:todo});
+        return view.render().el;
+    },
     addTodo: function(con){
         todoList.create({content: con,completed:false});
     },

@@ -13,7 +13,10 @@ module.exports = Backbone.Model.extend({
     },
 
     toggle : function(){
-    	this.save({completed : !this.get('completed')});
+    	this.save({completed : !this.getCompleted()});
+    },
+    getCompleted : function(){
+    	return this.get('completed');
     }
 
 });

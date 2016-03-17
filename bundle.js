@@ -13747,28 +13747,33 @@
 
 	    render: function render(todos) {
 	        var models = _todoCollection2.default.models,
-	            that = this;
+	            str = '',
+	            that = this,
+	            frag = document.createDocumentFragment();
+
 	        if (Array.isArray(todos)) {
 	            models = todos;
 	        }
 	        this.jTodoList.html('');
 	        models.forEach(function (model) {
-	            that.addOne(model);
+	            frag.insertBefore(that.addOneStr(model), frag.firstChild);
 	        });
+	        (0, _jquery2.default)(this.jTodoList).append(frag);
 	        this.updateFooter();
 	        return this;
 	    },
-
 	    updateFooter: function updateFooter() {
 	        var remaining = _todoCollection2.default.getRemaining().length;
 	        (0, _jquery2.default)(this.jFooter).html(this.template({ left: remaining }));
 	    },
-
 	    addOne: function addOne(todo) {
 	        var view = new _todoView2.default({ model: todo });
-	        (0, _jquery2.default)(this.jTodoList).append(view.render().el);
+	        (0, _jquery2.default)(this.jTodoList).prepend(view.render().el);
 	    },
-
+	    addOneStr: function addOneStr(todo) {
+	        var view = new _todoView2.default({ model: todo });
+	        return view.render().el;
+	    },
 	    addTodo: function addTodo(con) {
 	        _todoCollection2.default.create({ content: con, completed: false });
 	    },
@@ -13855,7 +13860,10 @@
 	    },
 
 	    toggle: function toggle() {
-	        this.save({ completed: !this.get('completed') });
+	        this.save({ completed: !this.getCompleted() });
+	    },
+	    getCompleted: function getCompleted() {
+	        return this.get('completed');
 	    }
 
 	});
@@ -13885,7 +13893,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	module.exports = _backbone2.default.View.extend({
-
+	    //el: "<div> <div class = 'todo-model-div'> </div> </div>"
 	    tagName: 'div',
 	    className: 'todo-model-div',
 	    template: _underscore2.default.template((0, _jquery2.default)('#item-template').html()),
@@ -13901,7 +13909,7 @@
 
 	    render: function render() {
 	        this.$el.html(this.template(this.model.toJSON()));
-	        this.$el.toggleClass("checked", this.model.get("completed"));
+	        this.$el.toggleClass("checked", this.model.getCompleted());
 	        return this;
 	    },
 
