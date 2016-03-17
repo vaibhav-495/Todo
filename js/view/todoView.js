@@ -8,7 +8,7 @@ import LocalStorage from "backbone.localstorage";
 
 
 module.exports = Backbone.View.extend({
-
+    //el: "<div> <div class = 'todo-model-div'> </div> </div>"
     tagName: 'div',
     className: 'todo-model-div',
     template: _.template($('#item-template').html()),

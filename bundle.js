@@ -13747,28 +13747,34 @@
 
 	    render: function render(todos) {
 	        var models = _todoCollection2.default.models,
+	            str = '',
 	            that = this;
 	        if (Array.isArray(todos)) {
 	            models = todos;
 	        }
 	        this.jTodoList.html('');
+
 	        models.forEach(function (model) {
-	            that.addOne(model);
+	            str = that.addOneStr(model) + str;
 	        });
+	        (0, _jquery2.default)(this.jTodoList).html(str);
 	        this.updateFooter();
 	        return this;
 	    },
-
 	    updateFooter: function updateFooter() {
 	        var remaining = _todoCollection2.default.getRemaining().length;
 	        (0, _jquery2.default)(this.jFooter).html(this.template({ left: remaining }));
 	    },
-
 	    addOne: function addOne(todo) {
 	        var view = new _todoView2.default({ model: todo });
 	        (0, _jquery2.default)(this.jTodoList).prepend(view.render().el);
 	    },
-
+	    addOneStr: function addOneStr(todo) {
+	        var view = new _todoView2.default({ model: todo });
+	        console.log((0, _jquery2.default)('<div>').append((0, _jquery2.default)(view.render().el)).html());
+	        //console.log ($(view.render().el).parent().html(),view.render().el);
+	        return (0, _jquery2.default)(view.render().el).parent().html();
+	    },
 	    addTodo: function addTodo(con) {
 	        _todoCollection2.default.create({ content: con, completed: false });
 	    },
@@ -13888,7 +13894,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	module.exports = _backbone2.default.View.extend({
-
+	    //el: "<div> <div class = 'todo-model-div'> </div> </div>"
 	    tagName: 'div',
 	    className: 'todo-model-div',
 	    template: _underscore2.default.template((0, _jquery2.default)('#item-template').html()),
