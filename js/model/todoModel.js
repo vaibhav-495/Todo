@@ -1,11 +1,22 @@
-var app = app || {};
+import $ from "jquery";
 
-app.Todo=Backbone.Model.extend({
+import _ from "underscore";
+
+import Backbone from "backbone";
+
+import LocalStorage from "backbone.localstorage";
+
+module.exports = Backbone.Model.extend({
     defaults: {
         content: '',
         completed: false
     },
+
     toggle : function(){
-    	this.save({completed : !this.get('completed')});
+    	this.save({completed : !this.getCompleted()});
+    },
+    getCompleted : function(){
+    	return this.get('completed');
     }
+
 });
