@@ -25,7 +25,6 @@ module.exports = Backbone.View.extend({
     render: function(){
         this.$el.html(this.template(this.model.toJSON()));
         this.$el.toggleClass("checked" , this.model.getCompleted());
-        console.log(this.model.getCompleted());
         return this;
     },
 

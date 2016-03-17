@@ -13748,16 +13748,17 @@
 	    render: function render(todos) {
 	        var models = _todoCollection2.default.models,
 	            str = '',
-	            that = this;
+	            that = this,
+	            frag = document.createDocumentFragment();
+
 	        if (Array.isArray(todos)) {
 	            models = todos;
 	        }
 	        this.jTodoList.html('');
-
 	        models.forEach(function (model) {
-	            str = that.addOneStr(model) + str;
+	            frag.insertBefore(that.addOneStr(model), frag.firstChild);
 	        });
-	        (0, _jquery2.default)(this.jTodoList).html(str);
+	        (0, _jquery2.default)(this.jTodoList).append(frag);
 	        this.updateFooter();
 	        return this;
 	    },
@@ -13771,9 +13772,7 @@
 	    },
 	    addOneStr: function addOneStr(todo) {
 	        var view = new _todoView2.default({ model: todo });
-	        console.log((0, _jquery2.default)('<div>').append((0, _jquery2.default)(view.render().el)).html());
-	        //console.log ($(view.render().el).parent().html(),view.render().el);
-	        return (0, _jquery2.default)(view.render().el).parent().html();
+	        return view.render().el;
 	    },
 	    addTodo: function addTodo(con) {
 	        _todoCollection2.default.create({ content: con, completed: false });
@@ -13911,7 +13910,6 @@
 	    render: function render() {
 	        this.$el.html(this.template(this.model.toJSON()));
 	        this.$el.toggleClass("checked", this.model.getCompleted());
-	        console.log(this.model.getCompleted());
 	        return this;
 	    },
 
