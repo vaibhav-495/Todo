@@ -66,7 +66,7 @@
 
 	var _appView2 = _interopRequireDefault(_appView);
 
-	__webpack_require__(9);
+	__webpack_require__(6);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -13711,17 +13711,15 @@
 
 	var _backbone4 = _interopRequireDefault(_backbone3);
 
-	var _todoCollection = __webpack_require__(6);
+	var _todoCollection = __webpack_require__(10);
 
 	var _todoCollection2 = _interopRequireDefault(_todoCollection);
 
-	var _todoView = __webpack_require__(8);
+	var _todoView = __webpack_require__(12);
 
 	var _todoView2 = _interopRequireDefault(_todoView);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	//import "../../styles/homepage.less"
 
 	module.exports = _backbone2.default.View.extend({
 	    el: '<div><div class="todo-view__list"></div><div class="todo-view__footer"></div></div>',
@@ -13785,9 +13783,20 @@
 	    },
 
 	    clearCompleted: function clearCompleted() {
-	        var doneModels = _todoCollection2.default.getDone();
-	        doneModels.forEach(function (model) {
-	            model.destroy();
+
+	        var promise = new Promise(function (resolve, reject) {
+	            console.log("Pinging the server");
+	            setTimeout(function () {
+	                console.log("Got from server");
+	                resolve();
+	            }, 2000);
+	        });
+
+	        promise.then(function () {
+	            var doneModels = _todoCollection2.default.getDone();
+	            doneModels.forEach(function (model) {
+	                model.destroy();
+	            });
 	        });
 	    }
 	});
@@ -13796,164 +13805,13 @@
 /* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
-
-	var _jquery = __webpack_require__(1);
-
-	var _jquery2 = _interopRequireDefault(_jquery);
-
-	var _underscore = __webpack_require__(2);
-
-	var _underscore2 = _interopRequireDefault(_underscore);
-
-	var _backbone = __webpack_require__(3);
-
-	var _backbone2 = _interopRequireDefault(_backbone);
-
-	var _backbone3 = __webpack_require__(4);
-
-	var _backbone4 = _interopRequireDefault(_backbone3);
-
-	var _todoModel = __webpack_require__(7);
-
-	var _todoModel2 = _interopRequireDefault(_todoModel);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var TodoList = _backbone2.default.Collection.extend({
-	    model: _todoModel2.default,
-	    localStorage: new Store("backbone-todo"),
-
-	    getRemaining: function getRemaining() {
-	        return this.where({ completed: false });
-	    },
-
-	    getDone: function getDone() {
-	        return this.where({ completed: true });
-	    }
-	});
-
-	module.exports = new TodoList();
-
-/***/ },
-/* 7 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var _jquery = __webpack_require__(1);
-
-	var _jquery2 = _interopRequireDefault(_jquery);
-
-	var _underscore = __webpack_require__(2);
-
-	var _underscore2 = _interopRequireDefault(_underscore);
-
-	var _backbone = __webpack_require__(3);
-
-	var _backbone2 = _interopRequireDefault(_backbone);
-
-	var _backbone3 = __webpack_require__(4);
-
-	var _backbone4 = _interopRequireDefault(_backbone3);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	module.exports = _backbone2.default.Model.extend({
-	    defaults: {
-	        content: '',
-	        completed: false
-	    },
-
-	    toggle: function toggle() {
-	        this.save({ completed: !this.getCompleted() });
-	    },
-	    getCompleted: function getCompleted() {
-	        return this.get('completed');
-	    }
-
-	});
-
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var _jquery = __webpack_require__(1);
-
-	var _jquery2 = _interopRequireDefault(_jquery);
-
-	var _underscore = __webpack_require__(2);
-
-	var _underscore2 = _interopRequireDefault(_underscore);
-
-	var _backbone = __webpack_require__(3);
-
-	var _backbone2 = _interopRequireDefault(_backbone);
-
-	var _backbone3 = __webpack_require__(4);
-
-	var _backbone4 = _interopRequireDefault(_backbone3);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var deleteTodo = function deleteTodo() {
-	    this.model.destroy();
-	},
-	    toggleTodo = function toggleTodo() {
-	    this.model.toggle();
-	};
-
-	module.exports = _backbone2.default.View.extend({
-	    tagName: 'div',
-	    className: 'todo-view__list__item',
-	    template: _underscore2.default.template((0, _jquery2.default)('#item-template').html()),
-
-	    events: {
-	        'click .todo-view__list__item__toggle': function clickTodoView__list__item__toggle() {
-	            toggleTodo.call(this);
-	        },
-
-	        "click .todo-view__list__item__delete": "temp"
-
-	    },
-	    temp: function temp() {
-	        console.log(this);
-	        this.clean();
-	    },
-	    initialize: function initialize() {
-	        this.model.on("change", this.render, this);
-	        this.model.on("remove", this.clean, this);
-	    },
-
-	    clean: function clean() {
-	        this.$el.off();
-	        this.unbind();
-	        this.undelegateEvents();
-	        this.remove();
-	        console.log(this.events);
-	    },
-
-	    render: function render() {
-	        this.$el.html(this.template(this.model.toJSON()));
-	        this.$el.toggleClass("checked", this.model.getCompleted());
-	        return this;
-	    }
-
-	});
-
-/***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(10);
+	var content = __webpack_require__(7);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(11)(content, {});
+	var update = __webpack_require__(9)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -13970,10 +13828,10 @@
 	}
 
 /***/ },
-/* 10 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(12)();
+	exports = module.exports = __webpack_require__(8)();
 	// imports
 
 
@@ -13984,7 +13842,63 @@
 
 
 /***/ },
-/* 11 */
+/* 8 */
+/***/ function(module, exports) {
+
+	/*
+		MIT License http://www.opensource.org/licenses/mit-license.php
+		Author Tobias Koppers @sokra
+	*/
+	// css base code, injected by the css-loader
+	module.exports = function() {
+		var list = [];
+
+		// return the list of modules as css string
+		list.toString = function toString() {
+			var result = [];
+			for(var i = 0; i < this.length; i++) {
+				var item = this[i];
+				if(item[2]) {
+					result.push("@media " + item[2] + "{" + item[1] + "}");
+				} else {
+					result.push(item[1]);
+				}
+			}
+			return result.join("");
+		};
+
+		// import a list of modules into the list
+		list.i = function(modules, mediaQuery) {
+			if(typeof modules === "string")
+				modules = [[null, modules, ""]];
+			var alreadyImportedModules = {};
+			for(var i = 0; i < this.length; i++) {
+				var id = this[i][0];
+				if(typeof id === "number")
+					alreadyImportedModules[id] = true;
+			}
+			for(i = 0; i < modules.length; i++) {
+				var item = modules[i];
+				// skip already imported module
+				// this implementation is not 100% perfect for weird media query combinations
+				//  when a module is imported multiple times with different media queries.
+				//  I hope this will never occur (Hey this way we have smaller bundles)
+				if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+					if(mediaQuery && !item[2]) {
+						item[2] = mediaQuery;
+					} else if(mediaQuery) {
+						item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+					}
+					list.push(item);
+				}
+			}
+		};
+		return list;
+	};
+
+
+/***/ },
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -14238,60 +14152,152 @@
 
 
 /***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var _jquery = __webpack_require__(1);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _underscore = __webpack_require__(2);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _backbone = __webpack_require__(3);
+
+	var _backbone2 = _interopRequireDefault(_backbone);
+
+	var _backbone3 = __webpack_require__(4);
+
+	var _backbone4 = _interopRequireDefault(_backbone3);
+
+	var _todoModel = __webpack_require__(11);
+
+	var _todoModel2 = _interopRequireDefault(_todoModel);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var TodoList = _backbone2.default.Collection.extend({
+	    model: _todoModel2.default,
+	    localStorage: new Store("backbone-todo"),
+
+	    getRemaining: function getRemaining() {
+	        return this.where({ completed: false });
+	    },
+
+	    getDone: function getDone() {
+	        return this.where({ completed: true });
+	    }
+	});
+
+	module.exports = new TodoList();
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var _jquery = __webpack_require__(1);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _underscore = __webpack_require__(2);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _backbone = __webpack_require__(3);
+
+	var _backbone2 = _interopRequireDefault(_backbone);
+
+	var _backbone3 = __webpack_require__(4);
+
+	var _backbone4 = _interopRequireDefault(_backbone3);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	module.exports = _backbone2.default.Model.extend({
+	    defaults: {
+	        content: '',
+	        completed: false
+	    },
+
+	    toggle: function toggle() {
+	        this.save({ completed: !this.getCompleted() });
+	    },
+	    getCompleted: function getCompleted() {
+	        return this.get('completed');
+	    }
+
+	});
+
+/***/ },
 /* 12 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	/*
-		MIT License http://www.opensource.org/licenses/mit-license.php
-		Author Tobias Koppers @sokra
-	*/
-	// css base code, injected by the css-loader
-	module.exports = function() {
-		var list = [];
+	"use strict";
 
-		// return the list of modules as css string
-		list.toString = function toString() {
-			var result = [];
-			for(var i = 0; i < this.length; i++) {
-				var item = this[i];
-				if(item[2]) {
-					result.push("@media " + item[2] + "{" + item[1] + "}");
-				} else {
-					result.push(item[1]);
-				}
-			}
-			return result.join("");
-		};
+	var _jquery = __webpack_require__(1);
 
-		// import a list of modules into the list
-		list.i = function(modules, mediaQuery) {
-			if(typeof modules === "string")
-				modules = [[null, modules, ""]];
-			var alreadyImportedModules = {};
-			for(var i = 0; i < this.length; i++) {
-				var id = this[i][0];
-				if(typeof id === "number")
-					alreadyImportedModules[id] = true;
-			}
-			for(i = 0; i < modules.length; i++) {
-				var item = modules[i];
-				// skip already imported module
-				// this implementation is not 100% perfect for weird media query combinations
-				//  when a module is imported multiple times with different media queries.
-				//  I hope this will never occur (Hey this way we have smaller bundles)
-				if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-					if(mediaQuery && !item[2]) {
-						item[2] = mediaQuery;
-					} else if(mediaQuery) {
-						item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-					}
-					list.push(item);
-				}
-			}
-		};
-		return list;
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _underscore = __webpack_require__(2);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _backbone = __webpack_require__(3);
+
+	var _backbone2 = _interopRequireDefault(_backbone);
+
+	var _backbone3 = __webpack_require__(4);
+
+	var _backbone4 = _interopRequireDefault(_backbone3);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+	var deleteTodo = function deleteTodo() {
+	    this.model.destroy();
+	},
+	    toggleTodo = function toggleTodo() {
+	    this.model.toggle();
 	};
 
+	module.exports = _backbone2.default.View.extend({
+	    tagName: 'div',
+	    className: 'todo-view__list__item',
+	    template: _underscore2.default.template((0, _jquery2.default)('#item-template').html()),
+
+	    events: _defineProperty({
+	        'click .todo-view__list__item__toggle': function clickTodoView__list__item__toggle() {
+	            toggleTodo.call(this);
+	        },
+	        "click .todo-view__list__item__delete": function clickTodoView__list__item__delete() {
+	            deleteTodo.call(this);
+	        }
+	    }, "click .todo-view__list__item__delete", "clean"),
+	    initialize: function initialize() {
+	        this.model.on("change", this.render, this);
+	        this.model.on("remove", this.clean, this);
+	    },
+
+	    clean: function clean() {
+	        this.$el.off();
+	        this.unbind();
+	        this.undelegateEvents();
+	        this.remove();
+	    },
+
+	    render: function render() {
+	        this.$el.html(this.template(this.model.toJSON()));
+	        this.$el.toggleClass("checked", this.model.getCompleted());
+	        return this;
+	    }
+
+	});
 
 /***/ }
 /******/ ]);

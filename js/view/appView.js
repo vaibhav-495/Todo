@@ -10,8 +10,6 @@ import todoList from "../collection/todoCollection";
 
 import todoView from "./todoView";
 
-//import "../../styles/homepage.less"
-
 
 module.exports = Backbone.View.extend({
     el:'<div><div class="todo-view__list"></div><div class="todo-view__footer"></div></div>',
@@ -71,9 +69,23 @@ module.exports = Backbone.View.extend({
     },
 
     clearCompleted : function () {
-        var doneModels = todoList.getDone();
-        doneModels.forEach(function (model) {
-            model.destroy();
-        })
+      
+      var promise = new Promise(
+            function (resolve, reject) {
+                console.log("Pinging the server");
+                setTimeout(function(){
+                   console.log("Got from server");
+                   resolve();
+                }, 2000);
+            }
+
+      );
+
+        promise.then( function () {
+            var doneModels = todoList.getDone();
+            doneModels.forEach(function (model) {
+                model.destroy();
+            });
+        });
     }
 });

@@ -23,13 +23,10 @@ module.exports = Backbone.View.extend({
         'click .todo-view__list__item__toggle': function () {
                 toggleTodo.call(this);
         },
-        
-        "click .todo-view__list__item__delete":"temp"
-        
-    },
-    temp: function(){
-        console.log(this)
-        this.clean();
+        "click .todo-view__list__item__delete": function () {
+                deleteTodo.call(this)
+        },
+        "click .todo-view__list__item__delete":"clean"
     },
     initialize : function () {
        this.model.on("change" , this.render, this);
@@ -41,7 +38,6 @@ module.exports = Backbone.View.extend({
         this.unbind();
         this.undelegateEvents();
         this.remove();
-        console.log(this.events);
     },
 
     render: function(){
