@@ -10,22 +10,23 @@ import todoList from "../collection/todoCollection";
 
 import todoView from "./todoView";
 
+
 module.exports = Backbone.View.extend({
-    el:'<div><div class="todo-view__list todo-list"></div><footer class="list-footer"></footer></div>',
+    el:'<div><div class="todo-view__list"></div><div class="todo-view__footer"></div></div>',
 
     template : _.template($("#item-footer").html()),
 
     events: {
-        'click .clear' : 'clearCompleted',
-        'click .done-todo': function () {this.render(todoList.getDone());},
-        'click .left-todo': function () {this.render(todoList.getRemaining());},
-        'click .all-todo' : 'render'
+        'click .todo-view__footer__clear' : 'clearCompleted',
+        'click .todo-view__footer__done': function () {this.render(todoList.getDone());},
+        'click .todo-view__footer__left': function () {this.render(todoList.getRemaining());},
+        'click .todo-view__footer__all' : 'render'
     },
 
     initialize: function(){
         var that = this;
-        that.jTodoList = that.$el.find(".todo-list");
-        that.jFooter = that.$el.find('.list-footer');
+        that.jTodoList = that.$el.find(".todo-view__list");
+        that.jFooter = that.$el.find('.todo-view__footer');
 
         todoList.on("remove",this.render,this);
         todoList.on("add", this.addOne, this);
@@ -68,9 +69,23 @@ module.exports = Backbone.View.extend({
     },
 
     clearCompleted : function () {
-        var doneModels = todoList.getDone();
-        doneModels.forEach(function (model) {
-            model.destroy();
-        })
+      
+      var promise = new Promise(
+            function (resolve, reject) {
+                console.log("Pinging the server");
+                setTimeout(function(){
+                   console.log("Got from server");
+                   resolve();
+                }, 2000);
+            }
+
+      );
+
+        promise.then( function () {
+            var doneModels = todoList.getDone();
+            doneModels.forEach(function (model) {
+                model.destroy();
+            });
+        });
     }
 });

@@ -16,32 +16,29 @@
 
     <div id="wrapper">
         <div class="todo"> 
-          <div class="todo__heading">TODOS</div> 
-          <!-- <button id="delete-all">Delete all</button> -->  
-          <div class="input"> 
-            <input class="input__field" placeholder="What needs to be done ?"> 
-          </div>
-        <div class = "todo-view"></div>
+          <header class="todo__heading">TODOS</header> 
+            <input class="todo__input" placeholder="What needs to be done ?"> 
+        <section class = "todo-view"></section>
         </div>
     </div>
   </body>
 
   <script type="text/template" id="item-template">
 
-<div class="template">
-    <input class="template__toggle" type="checkbox" <%=completed ? 'checked' : '' %>>
-    <div class="template__content"><label ><%=content%></label></div>
-    <button class="template__delete">Delete</button>
+<div>
+    <input class="todo-view__list__item__toggle" type="checkbox" <%=completed ? 'checked' : '' %>>
+    <div class="todo-view__list__item__content"><label ><%=content%></label></div>
+    <button class="todo-view__list__item__delete">Delete</button>
 </div>
 
   </script>
 
   <script type="text/template" id = "item-footer">
       <span> <%= left %> <%= left == 1 ? 'item' : 'items' %> left </span>
-      <button class= "done-todo">Show Completed</button>
-      <button class="left-todo">Show Remaining</button>
-      <button class="all-todo">Show All</button>
-      <button class = "clear">Clear Completed</button>
+      <button class= "todo-view__footer__done">Show Completed</button>
+      <button class="todo-view__footer__left">Show Remaining</button>
+      <button class="todo-view__footer__all">Show All</button>
+      <button class = "todo-view__footer__clear">Clear Completed</button>
 </script>
 
   <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.5.3/less.min.js"></script>

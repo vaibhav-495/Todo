@@ -18,7 +18,7 @@ var CompleteView = Backbone.View.extend({
     el:"#wrapper",
 
     events: {
-        'keypress .input__field' : function(e){
+        'keypress .todo__input' : function(e){
             e.keyCode === 13 && this.addTodo();
         }
     },
@@ -26,7 +26,7 @@ var CompleteView = Backbone.View.extend({
     initialize: function(){
         this.appView = new AppView();
 
-        this.jInput = $(".input__field");
+        this.jInput = $(".todo__input");
         this.render();
     },
 

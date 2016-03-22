@@ -73,7 +73,7 @@
 	    el: "#wrapper",
 
 	    events: {
-	        'keypress .input__field': function keypressInput__field(e) {
+	        'keypress .todo__input': function keypressTodo__input(e) {
 	            e.keyCode === 13 && this.addTodo();
 	        }
 	    },
@@ -81,7 +81,7 @@
 	    initialize: function initialize() {
 	        this.appView = new _appView2.default();
 
-	        this.jInput = (0, _jquery2.default)(".input__field");
+	        this.jInput = (0, _jquery2.default)(".todo__input");
 	        this.render();
 	    },
 
@@ -13718,25 +13718,25 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	module.exports = _backbone2.default.View.extend({
-	    el: '<div><div class="todo-view__list todo-list"></div><footer class="list-footer"></footer></div>',
+	    el: '<div><div class="todo-view__list"></div><div class="todo-view__footer"></div></div>',
 
 	    template: _underscore2.default.template((0, _jquery2.default)("#item-footer").html()),
 
 	    events: {
-	        'click .clear': 'clearCompleted',
-	        'click .done-todo': function clickDoneTodo() {
+	        'click .todo-view__footer__clear': 'clearCompleted',
+	        'click .todo-view__footer__done': function clickTodoView__footer__done() {
 	            this.render(_todoCollection2.default.getDone());
 	        },
-	        'click .left-todo': function clickLeftTodo() {
+	        'click .todo-view__footer__left': function clickTodoView__footer__left() {
 	            this.render(_todoCollection2.default.getRemaining());
 	        },
-	        'click .all-todo': 'render'
+	        'click .todo-view__footer__all': 'render'
 	    },
 
 	    initialize: function initialize() {
 	        var that = this;
-	        that.jTodoList = that.$el.find(".todo-list");
-	        that.jFooter = that.$el.find('.list-footer');
+	        that.jTodoList = that.$el.find(".todo-view__list");
+	        that.jFooter = that.$el.find('.todo-view__footer');
 
 	        _todoCollection2.default.on("remove", this.render, this);
 	        _todoCollection2.default.on("add", this.addOne, this);
@@ -13779,9 +13779,20 @@
 	    },
 
 	    clearCompleted: function clearCompleted() {
-	        var doneModels = _todoCollection2.default.getDone();
-	        doneModels.forEach(function (model) {
-	            model.destroy();
+
+	        var promise = new Promise(function (resolve, reject) {
+	            console.log("Pinging the server");
+	            setTimeout(function () {
+	                console.log("Got from server");
+	                resolve();
+	            }, 2000);
+	        });
+
+	        promise.then(function () {
+	            var doneModels = _todoCollection2.default.getDone();
+	            doneModels.forEach(function (model) {
+	                model.destroy();
+	            });
 	        });
 	    }
 	});
@@ -13892,33 +13903,43 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	var deleteTodo = function deleteTodo() {
+	    this.model.destroy();
+	},
+	    toggleTodo = function toggleTodo() {
+	    this.model.toggle();
+	};
+
 	module.exports = _backbone2.default.View.extend({
-	    //el: "<div> <div class = 'todo-model-div'> </div> </div>"
 	    tagName: 'div',
-	    className: 'todo-model-div',
+	    className: 'todo-view__list__item',
 	    template: _underscore2.default.template((0, _jquery2.default)('#item-template').html()),
 
 	    events: {
-	        'click .template__toggle': 'toggleTodo',
-	        "click .template__delete": "deleteTodo"
+	        'click .todo-view__list__item__toggle': function clickTodoView__list__item__toggle() {
+	            toggleTodo.call(this);
+	        },
+	        "click .todo-view__list__item__delete": function clickTodoView__list__item__delete() {
+	            deleteTodo.call(this);
+	        }
 	    },
 
 	    initialize: function initialize() {
 	        this.model.on("change", this.render, this);
+	        this.model.on("remove", this.clean, this);
+	    },
+
+	    clean: function clean() {
+	        this.$el.off();
+	        this.unbind();
+	        this.undelegateEvents();
+	        this.remove();
 	    },
 
 	    render: function render() {
 	        this.$el.html(this.template(this.model.toJSON()));
 	        this.$el.toggleClass("checked", this.model.getCompleted());
 	        return this;
-	    },
-
-	    toggleTodo: function toggleTodo() {
-	        this.model.toggle();
-	    },
-
-	    deleteTodo: function deleteTodo() {
-	        this.model.destroy();
 	    }
 
 	});
