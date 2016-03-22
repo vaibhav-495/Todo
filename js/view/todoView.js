@@ -26,8 +26,8 @@ module.exports = Backbone.View.extend({
         "click .todo-view__list__item__delete": function () {
                 deleteTodo.call(this)
         },
+        "click .todo-view__list__item__delete":"clean"
     },
-
     initialize : function () {
        this.model.on("change" , this.render, this);
        this.model.on("remove" , this.clean, this);

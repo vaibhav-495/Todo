@@ -13903,6 +13903,8 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 	var deleteTodo = function deleteTodo() {
 	    this.model.destroy();
 	},
@@ -13915,15 +13917,14 @@
 	    className: 'todo-view__list__item',
 	    template: _underscore2.default.template((0, _jquery2.default)('#item-template').html()),
 
-	    events: {
+	    events: _defineProperty({
 	        'click .todo-view__list__item__toggle': function clickTodoView__list__item__toggle() {
 	            toggleTodo.call(this);
 	        },
 	        "click .todo-view__list__item__delete": function clickTodoView__list__item__delete() {
 	            deleteTodo.call(this);
 	        }
-	    },
-
+	    }, "click .todo-view__list__item__delete", "clean"),
 	    initialize: function initialize() {
 	        this.model.on("change", this.render, this);
 	        this.model.on("remove", this.clean, this);
