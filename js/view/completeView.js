@@ -12,6 +12,7 @@ import LocalStorage from "backbone.localstorage";
 
 import AppView from "./appView";
 
+import "../../styles/homepage.less"
 
 var CompleteView = Backbone.View.extend({
 

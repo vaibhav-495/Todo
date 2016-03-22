@@ -10,6 +10,9 @@ import todoList from "../collection/todoCollection";
 
 import todoView from "./todoView";
 
+//import "../../styles/homepage.less"
+
+
 module.exports = Backbone.View.extend({
     el:'<div><div class="todo-view__list"></div><div class="todo-view__footer"></div></div>',
 
